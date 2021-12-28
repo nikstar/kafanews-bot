@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+    bot:
+        image: kafanews-bot
+        build: .
+        env_file: ./.env
+        restart: always
+        

@@ -1,9 +1,2 @@
-.DS_Store
-/.build
-/Packages
-/*.xcodeproj
-token.swift
-*.json
-.swiftpm
-.vscode
-
+.env
+/home

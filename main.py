@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import asyncio
 import argparse
@@ -8,6 +8,7 @@ import os
 RHASH = '85facb56a33f34'
 
 async def main():
+    print("Starting...")
     parser = argparse.ArgumentParser(description='Watch kafanews feed and post updates to Telegram channel', epilog='Set KAFANEWS_BOT_TOKEN environment variable to use this script')
     parser.add_argument('--channel', help='channel to post updates to', default='@kafanews_com')
     parser.add_argument('--max-backlog', '-m', help='maximum number of items to publish after launch', default=2)
@@ -28,19 +29,21 @@ async def main():
             else list(filter(lambda entry: entry.published_parsed > last_item, feed.entries))
         if len(new_entries) > 0:
            last_item = new_entries[0].published_parsed
+        print(f"Found {len(new_entries)} new entries", flush=True)
         for entry in new_entries[::-1]:
-            if showld_post(entry.link):
+            if should_post(entry.link):
                 post(entry)
-        await asyncio.sleep(10)        
-
+        await asyncio.sleep(10)   
+         
 
 def post(entry):
-    print(entry.title, instant_view_link(entry.link), entry.published)
+    print(entry.title, instant_view_link(entry.link), entry.published, flush=True)
 
 def instant_view_link(url: str) -> str:
     return f"https://t.me/iv?rhash={RHASH}&url={url}"
 
-def showld_post(url: str) -> bool:
+def should_post(url: str) -> bool:
     return True # filter out posts that are not relevant
 
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())
